@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
         messages.push({ role: "user", content: userMessage });
         userInput.value = '';
         sendBtn.disabled = true;
+        sendBtn.textContent = 'Thinking...'; // 添加加载状态
 
         try {
             const response = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
@@ -57,17 +58,18 @@ document.addEventListener('DOMContentLoaded', () => {
             messages.push({ role: "assistant", content: aiMessage });
         } catch (error) {
             console.error('Error:', error);
-            addMessage('ai', '抱歉，出现了一些问题，请稍后再试。');
+            addMessage('ai', '抱歉，波浪中断了，请稍后再试。'); // 更符合Thinkwave风格的错误提示
         } finally {
             sendBtn.disabled = false;
+            sendBtn.textContent = '发送'; // 恢复按钮文本
         }
     }
 
     sendBtn.addEventListener('click', sendMessage);
     userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
+        if (e.key === 'Enter' && !sendBtn.disabled) sendMessage(); // 防止重复触发
     });
 
-    // 初始欢迎消息
-    addMessage('ai', '你好！我是Thinkwave，很高兴认识你。');
+    // 初始欢迎消息（更个性化）
+    addMessage('ai', '你好！我是Thinkwave，LUQI创造的思考波浪。让我们一起探索知识的海洋吧！');
 });
