@@ -5,103 +5,167 @@
 }
 
 body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #0d1b2a, #1b263b, #415a77); /* 深邃的蓝色渐变，象征思考的深度 */
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
+    color: #e0e0e0;
+    overflow: hidden; /* 防止背景溢出 */
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(65, 90, 119, 0.2), transparent); /* 添加微妙的波浪光晕 */
+    z-index: -1;
+    animation: pulse 10s infinite;
 }
 
 #chat-container {
     width: 100%;
-    max-width: 700px;
-    height: 600px;
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    max-width: 750px;
+    height: 650px;
+    background: rgba(20, 28, 42, 0.9); /* 半透明深蓝色背景 */
+    border-radius: 25px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(65, 90, 119, 0.3);
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    border: 1px solid #e0e4e8;
-    transition: transform 0.3s ease;
+    border: 1px solid rgba(65, 90, 119, 0.4);
+    backdrop-filter: blur(12px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
 }
 
 #chat-container:hover {
-    transform: scale(1.02);
+    transform: scale(1.015);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6), inset 0 0 15px rgba(65, 90, 119, 0.5);
 }
 
 #chat-messages {
     flex-grow: 1;
-    padding: 20px;
+    padding: 25px;
     overflow-y: auto;
-    background: #fafafa;
+    background: rgba(15, 22, 35, 0.85); /* 更深的背景，增强层次感 */
     scroll-behavior: smooth;
+    position: relative;
 }
 
 .message {
-    margin-bottom: 15px;
-    padding: 12px 18px;
-    border-radius: 15px;
-    max-width: 75%;
+    margin-bottom: 18px;
+    padding: 14px 20px;
+    border-radius: 20px;
+    max-width: 80%;
     word-wrap: break-word;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    animation: fadeIn 0.3s ease-in;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+    animation: fadeIn 0.4s ease-in;
+    transition: transform 0.2s ease;
+}
+
+.message:hover {
+    transform: translateY(-2px); /* 悬停时轻微上浮 */
 }
 
 .user-message {
-    background: linear-gradient(90deg, #007bff, #00c4ff);
-    color: white;
+    background: linear-gradient(90deg, #00b4d8, #0077b6); /* 清新的蓝色渐变 */
+    color: #fff;
     align-self: flex-end;
     margin-left: auto;
 }
 
 .ai-message {
-    background: #e9ecef;
-    color: #333;
+    background: linear-gradient(90deg, #2a4066, #3d5a80); /* Thinkwave的AI风格渐变 */
+    color: #e6ecef;
+    border: 1px solid rgba(65, 90, 119, 0.6);
     align-self: flex-start;
+    position: relative;
+}
+
+.ai-message::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: calc(100% + 2px);
+    height: calc(100% + 2px);
+    border-radius: 20px;
+    background: linear-gradient(45deg, rgba(0, 180, 216, 0.2), rgba(61, 90, 128, 0.2));
+    z-index: -1;
+    animation: waveGlow 3s infinite ease-in-out; /* 波浪光效 */
 }
 
 #message-input {
     display: flex;
     padding: 15px;
-    background: #f5f7fa;
-    border-top: 1px solid #e0e4e8;
+    background: rgba(20, 28, 42, 0.95);
+    border-top: 1px solid rgba(65, 90, 119, 0.5);
 }
 
 #user-input {
     flex-grow: 1;
-    padding: 12px 20px;
+    padding: 14px 22px;
     border: none;
-    border-radius: 25px;
-    background: #ffffff;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-radius: 30px;
+    background: rgba(40, 54, 80, 0.9);
+    color: #fff;
     font-size: 16px;
     outline: none;
-    transition: box-shadow 0.3s, transform 0.2s;
+    transition: all 0.3s ease;
+}
+
+#user-input::placeholder {
+    color: #a3bffa; /* 浅蓝色占位符 */
 }
 
 #user-input:focus {
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
-    transform: scale(1.01);
+    background: rgba(50, 66, 100, 0.9);
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.6), inset 0 0 5px rgba(0, 180, 216, 0.4);
+    transform: scale(1.02);
 }
 
 #send-btn {
-    background: linear-gradient(90deg, #4CAF50, #66bb6a);
+    background: linear-gradient(90deg, #00b4d8, #48cae4); /* 鲜艳的发送按钮渐变 */
     color: white;
     border: none;
-    padding: 12px 25px;
-    border-radius: 25px;
+    padding: 14px 30px;
+    border-radius: 30px;
     font-size: 16px;
+    font-weight: 500;
     cursor: pointer;
-    margin-left: 10px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    margin-left: 12px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+#send-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+#send-btn:hover::after {
+    width: 200%;
+    height: 200%;
 }
 
 #send-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 180, 216, 0.6);
 }
 
 #send-btn:active {
@@ -110,19 +174,29 @@ body {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
+    from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes waveGlow {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
 #chat-messages::-webkit-scrollbar {
-    width: 8px;
+    width: 10px;
 }
 
 #chat-messages::-webkit-scrollbar-thumb {
-    background: #c3cfe2;
+    background: linear-gradient(#00b4d8, #0077b6);
     border-radius: 10px;
 }
 
 #chat-messages::-webkit-scrollbar-track {
-    background: #f0f2f5;
+    background: rgba(40, 54, 80, 0.5);
 }
