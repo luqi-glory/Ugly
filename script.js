@@ -10,18 +10,33 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
+    // 预处理内容，修复可能的LaTeX语法问题
+    function preprocessContent(content) {
+        let processed = content
+            .replace(/\\\$\$/g, '$$') // 将 \$ 替换为 $
+            .replace(/\\\$/g, '$')
+            .replace(/\\sum/g, '\sum') // 确保数学符号正确
+            .replace(/\\log/g, '\log');
+        console.log('预处理前:', content);
+        console.log('预处理后:', processed);
+        return processed;
+    }
+
     function addMessage(role, content) {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', role === 'user' ? 'user-message' : 'ai-message');
 
-        // 先用marked解析Markdown
-        const markdownContent = marked.parse(content, { breaks: true });
+        // 预处理内容
+        const processedContent = preprocessContent(content);
+        
+        // 使用marked解析Markdown
+        const markdownContent = marked.parse(processedContent, { breaks: true });
         messageDiv.innerHTML = markdownContent;
 
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // 确保MathJax渲染所有LaTeX公式
+        // 使用MathJax渲染LaTeX公式
         MathJax.typesetPromise([messageDiv]).then(() => {
             console.log('MathJax渲染完成:', messageDiv.innerHTML);
         }).catch((err) => console.error('MathJax渲染错误:', err));
@@ -79,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter' && !sendBtn.disabled) sendMessage();
     });
 
-    // 初始消息，使用修复后的交叉熵内容
+    // 初始消息（成功案例）
     const initialMessage = `交叉熵（Cross Entropy）是信息论中的一个重要概念，主要用于衡量两个概率分布之间的差异。在机器学习和深度学习中，交叉熵常用于分类任务的损失函数。
 
 给定两个概率分布 $P$ 和 $Q$，其中 $P$ 是真实分布，$Q$ 是预测分布，交叉熵的数学公式为：
@@ -89,27 +104,6 @@ $$ H(P, Q) = -\\sum_{i} P(i) \\log Q(i) $$
 其中：
 - $P(i)$ 是真实分布中第 $i$ 个类别的概率。
 - $Q(i)$ 是预测分布中第 $i$ 个类别的概率。
-- $\\log$ 通常以自然对数（底数为 $e$）计算。
-
-在二分类问题中，交叉熵可以简化为：
-
-$$ H(P, Q) = -[P(1) \\log Q(1) + P(0) \\log Q(0)] $$
-
-其中：
-- $P(1)$ 是真实标签为1的概率。
-- $Q(1)$ 是预测标签为1的概率。
-- $P(0) = 1 - P(1)$
-- $Q(0) = 1 - Q(1)$
-
-在多分类问题中，交叉熵通常表示为：
-
-$$ H(P, Q) = -\\sum_{c=1}^{C} y_c \\log p_c $$
-
-其中：
-- $C$ 是类别总数。
-- $y_c$ 是一个指示变量（通常为0或1），表示样本是否属于类别 $c$。
-- $p_c$ 是模型预测样本属于类别 $c$ 的概率。
-
-希望这个解释对你有帮助！如果你有更多问题，随时问我。`;
+- $\\log$ 通常以自然对数（底数为 $e$）计算。`;
     addMessage('ai', initialMessage);
 });

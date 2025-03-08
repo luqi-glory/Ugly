@@ -14,7 +14,8 @@
             tex: {
                 inlineMath: [['$', '$'], ['\\(', '\\)']], // 支持 $...$ 和 \(...\)
                 displayMath: [['$$', '$$'], ['\\[', '\\]']], // 支持 $$...$$ 和 \[...\]
-                processEscapes: true // 处理转义的美元符号
+                processEscapes: true, // 处理转义的美元符号
+                tags: 'ams' // 使用AMS编号样式
             },
             options: {
                 skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
