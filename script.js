@@ -14,13 +14,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', role === 'user' ? 'user-message' : 'ai-message');
 
+        // 先用marked解析Markdown
         const sanitizedContent = content
-            .replace(/</g, '&lt;')
+            .replace(/</g, '&lt;')  // 防止XSS攻击
             .replace(/>/g, '&gt;');
         messageDiv.innerHTML = marked.parse(sanitizedContent);
         
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // 在消息添加后触发MathJax渲染
+        MathJax.typesetPromise([messageDiv]).catch((err) => console.error('MathJax渲染错误:', err));
     }
 
     async function sendMessage() {
@@ -75,6 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter' && !sendBtn.disabled) sendMessage();
     });
 
-    // 初始消息支持Markdown
-    addMessage('ai', '主人你好！我是Thinkwave，请尽情在思维海洋里激起浪花吧');
+    // 初始消息支持Markdown和LaTeX
+    addMessage('ai', '主人你好！我是Thinkwave，请尽情在思维海洋里激起浪花吧！试试输入一个公式，比如：$$E=mc^2$$');
 });
