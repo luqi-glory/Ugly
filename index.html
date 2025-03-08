@@ -172,7 +172,7 @@
         userInput.value = '';
 
         try {
-            const response = await fetch('/api/chat', {  // 改为调用本地 API
+            const response = await fetch('/api/chat', {  
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
