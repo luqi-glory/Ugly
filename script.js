@@ -13,8 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
     function addMessage(role, content) {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', role === 'user' ? 'user-message' : 'ai-message');
-        // 使用marked解析Markdown并渲染为HTML
-        messageDiv.innerHTML = marked.parse(content);
+
+        const sanitizedContent = content
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
+        messageDiv.innerHTML = marked.parse(sanitizedContent);
+        
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
