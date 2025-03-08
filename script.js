@@ -14,15 +14,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', role === 'user' ? 'user-message' : 'ai-message');
 
-        // 使用marked解析Markdown
-        const markdownContent = marked.parse(content);
+        // 先用marked解析Markdown
+        const markdownContent = marked.parse(content, { breaks: true });
         messageDiv.innerHTML = markdownContent;
 
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // 使用MathJax渲染LaTeX公式
-        MathJax.typesetPromise([messageDiv]).catch((err) => console.error('MathJax渲染错误:', err));
+        // 确保MathJax渲染所有LaTeX公式
+        MathJax.typesetPromise([messageDiv]).then(() => {
+            console.log('MathJax渲染完成:', messageDiv.innerHTML);
+        }).catch((err) => console.error('MathJax渲染错误:', err));
     }
 
     async function sendMessage() {
@@ -101,7 +103,7 @@ $$ H(P, Q) = -[P(1) \\log Q(1) + P(0) \\log Q(0)] $$
 
 在多分类问题中，交叉熵通常表示为：
 
-$$ H(P, Q) = -\\sum_{c=1}^{C} y_c \\log(p_c) $$
+$$ H(P, Q) = -\\sum_{c=1}^{C} y_c \\log p_c $$
 
 其中：
 - $C$ 是类别总数。
