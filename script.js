@@ -76,5 +76,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 初始消息支持Markdown
-    addMessage('ai', '你好！我是Thinkwave，LUQI创造的思考波浪。\n\n让我们一起探索知识的海洋吧！');
+    addMessage('ai', '主人你好！我是Thinkwave，请尽情在思维海洋里激起浪花吧');
 });
