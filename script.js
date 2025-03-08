@@ -10,10 +10,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    // 预处理内容，只处理换行符
+    // 预处理内容，转换 LaTeX 分隔符并处理换行符
     function preprocessContent(content) {
-        // 将 \n 转换为实际换行符，交给 marked 处理
-        let processed = content.replace(/\\n/g, '\n');
+        let processed = content
+            // 处理换行符
+            .replace(/\\n/g, '\n')
+            // 将 \\[...\\] 转换为 $$...$$
+            .replace(/\\\[(.*?)\\\]/g, '$$$1$$')
+            // 将 \\(...\\) 转换为 $...$
+            .replace(/\\\((.*?)\\\)/g, '$$$1$$');
+
         console.log('预处理前:', content);
         console.log('预处理后:', processed);
         return processed;
