@@ -10,27 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    // 预处理内容，修复API返回的非标准LaTeX语法
+    // 预处理内容，只处理换行符
     function preprocessContent(content) {
-        let processed = content
-            // 处理独立公式：将 [...] 转换为 $$...$$
-            .replace(/\[(.*?)\]/g, '$$$1$$')
-            // 处理内联公式：将 ((...)) 转换为 $...$
-            .replace(/\(\((.*?)\)\)/g, '$$$1$$')
-            // 移除单括号包裹的变量，转换为内联公式
-            .replace(/\(([^()]+)\)/g, (match, p1) => {
-                // 只处理简单的变量或表达式，避免干扰公式
-                if (/^[a-zA-Z0-9]+$/.test(p1) || p1.includes('=')) {
-                    return `$${p1}$`;
-                }
-                return match;
-            })
-            // 修复转义符问题
-            .replace(/\\\$\$/g, '$$')
-            .replace(/\\\$/g, '$')
-            .replace(/\\sum/g, '\sum')
-            .replace(/\\log/g, '\log');
-
+        // 将 \n 转换为实际换行符，交给 marked 处理
+        let processed = content.replace(/\\n/g, '\n');
         console.log('预处理前:', content);
         console.log('预处理后:', processed);
         return processed;
@@ -43,14 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // 预处理内容
         const processedContent = preprocessContent(content);
         
-        // 使用marked解析Markdown
+        // 使用 marked 解析 Markdown
         const markdownContent = marked.parse(processedContent, { breaks: true });
         messageDiv.innerHTML = markdownContent;
 
         chatMessages.appendChild(messageDiv);
         chatMessages.scrollTop = chatMessages.scrollHeight;
 
-        // 使用MathJax渲染LaTeX公式
+        // 使用 MathJax 渲染 LaTeX 公式
         MathJax.typesetPromise([messageDiv]).then(() => {
             console.log('MathJax渲染完成:', messageDiv.innerHTML);
         }).catch((err) => console.error('MathJax渲染错误:', err));
@@ -108,35 +91,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter' && !sendBtn.disabled) sendMessage();
     });
 
-    // 初始消息（成功案例）
-    const initialMessage = `交叉熵（Cross Entropy）是信息论中的一个重要概念，主要用于衡量两个概率分布之间的差异。在机器学习和深度学习中，交叉熵常用于分类任务的损失函数。
-
-给定两个概率分布 $P$ 和 $Q$，其中 $P$ 是真实分布，$Q$ 是预测分布，交叉熵的数学公式为：
-
-$$ H(P, Q) = -\\sum_{i} P(i) \\log Q(i) $$
-
-其中：
-- $P(i)$ 是真实分布中第 $i$ 个类别的概率。
-- $Q(i)$ 是预测分布中第 $i$ 个类别的概率。
-- $\\log$ 通常以自然对数（底数为 $e$）计算。`;
+    // 初始消息（使用 $...$ 和 $$...$$）
+    const initialMessage = `交叉熵（Cross Entropy）是信息论中的一个重要概念，主要用于衡量两个概率分布之间的差异。在机器学习和深度学习中，交叉熵常用于分类任务的损失函数。\n\n给定两个概率分布 $P$ 和 $Q$，其中 $P$ 是真实分布，$Q$ 是预测分布，交叉熵的数学公式为：\n\n$$ H(P, Q) = -\\sum_{i} P(i) \\log Q(i) $$\n\n其中：\n- $P(i)$ 是真实分布中第 $i$ 个类别的概率。\n- $Q(i)$ 是预测分布中第 $i$ 个类别的概率。\n- $\\log$ 通常以自然对数（底数为 $e$）计算。`;
     addMessage('ai', initialMessage);
 
-    // 测试API返回的椭圆方程内容
-    const testAPIMessage = `当然可以！一个标准的椭圆方程在二维坐标系中通常表示为：
-
-[ \\frac{(x - h)^2}{a^2} + \\frac{(y - k)^2}{b^2} = 1 ]
-
-其中：
-
-((h, k)) 是椭圆的中心坐标，
-(a) 是椭圆的长轴长度的一半（半长轴），
-(b) 是椭圆的短轴长度的一半（半短轴）。
-如果椭圆的长轴与 (x)-轴平行，则 (a > b)；如果长轴与 (y)-轴平行，则 (b > a)。
-
-例如，一个中心在原点 ((0, 0))，长轴长度为 6（即 (a = 3)），短轴长度为 4（即 (b = 2)）的椭圆方程为：
-
-[ \\frac{x^2}{9} + \\frac{y^2}{4} = 1 ]
-
-如果你有其他具体需求或参数，可以告诉我，我可以帮你写出更具体的方程！`;
+    // 测试 API 返回格式（使用 \\(...\\) 和 \\[...\\]）
+    const testAPIMessage = `当然可以！一个标准的椭圆方程在二维坐标系中通常表示为：\n\n\\[ \\frac{(x - h)^2}{a^2} + \\frac{(y - k)^2}{b^2} = 1 \\]\n\n其中：\n- \\( (h, k) \\) 是椭圆的中心坐标，\n- \\( a \\) 是椭圆的长轴长度的一半（半长轴），\n- \\( b \\) 是椭圆的短轴长度的一半（半短轴）。\n如果椭圆的长轴与 \\( x \\)-轴平行，则 \\( a > b \\)；如果长轴与 \\( y \\)-轴平行，则 \\( b > a \\)。\n\n例如，一个中心在原点 \\( (0, 0) \\)，长轴长度为 6（即 \\( a = 3 \\)），短轴长度为 4（即 \\( b = 2 \\)）的椭圆方程为：\n\n\\[ \\frac{x^2}{9} + \\frac{y^2}{4} = 1 \\]\n\n如果你有其他具体需求或参数，可以告诉我，我可以帮你写出更具体的方程！`;
     addMessage('ai', testAPIMessage);
 });
