@@ -71,5 +71,5 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 初始欢迎消息（更个性化）
-    addMessage('ai', '你好！我是Thinkwave，LUQI创造的思考波浪。让我们一起探索知识的海洋吧！');
+    addMessage('ai', '你好！我是Thinkwave，很高兴认识你。');
 });
