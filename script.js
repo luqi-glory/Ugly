@@ -16,9 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // 处理换行符
             .replace(/\\n/g, '\n')
             // 将 \\[...\\] 转换为 $$...$$
-            .replace(/\\\[(.*?)\\\]/g, '$$$1$$')
+            .replace(/\\\[(.*?)\\\]/gs, '$$$1$$')
+            // 将 [...], 单反斜杠或无反斜杠的外联公式转换为 $$...$$
+            .replace(/(?<!\\)\[(.*?)(?<!\\)\]/gs, '$$$1$$')
             // 将 \\(...\\) 转换为 $...$
-            .replace(/\\\((.*?)\\\)/g, '$$$1$$');
+            .replace(/\\\((.*?)\\\)/gs, '$$$1$$');
 
         console.log('预处理前:', content);
         console.log('预处理后:', processed);
@@ -98,10 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 初始消息（使用 $...$ 和 $$...$$）
-    const initialMessage = `交叉熵器学习和深度学习中，交叉熵常用于分类任务的损失函数。\n\n给定两个概率分布 $P$ 和 $Q$，其中 $P$ 是真实分布，$Q$ 是预测分布，交叉熵的数学公式为：\n\n$$ H(P, Q) = -\\sum_{i} P(i) \\log Q(i) $$\n\n其中：\n- $P(i)$ 是真实分布中第 $i$ 个类别的概率。\n- $Q(i)$ 是预测分布中第 $i$ 个类别的概率。\n- $\\log$ 通常以自然对数（底数为 $e$）计算。`;
+    const initialMessage = `交叉熵（Cross Entropy）是信息论中的一个重要概念，主要用于衡量两个概率分布之间的差异。在机器学习和深度学习中，交叉熵常用于分类任务的损失函数。\n\n给定两个概率分布 $P$ 和 $Q$，其中 $P$ 是真实分布，$Q$ 是预测分布，交叉熵的数学公式为：\n\n$$ H(P, Q) = -\\sum_{i} P(i) \\log Q(i) $$\n\n其中：\n- $P(i)$ 是真实分布中第 $i$ 个类别的概率。\n- $Q(i)$ 是预测分布中第 $i$ 个类别的概率。\n- $\\log$ 通常以自然对数（底数为 $e$）计算。`;
     addMessage('ai', initialMessage);
 
-    // 测试 API 返回格式（使用 \\(...\\) 和 \\[...\\]）
-    const testAPIMessage = `当然可以！一个标准的椭圆方程在二维坐标系中通常表示为：\n\n\\[ \\frac{(x - h)^2}{a^2} + \\frac{(y - k)^2}{b^2} = 1 \\]\n\n其中：\n- \\( (h, k) \\) 是椭圆的中心坐标，\n- \\( a \\) 是椭圆的长轴长度的一半（半长轴），\n- \\( b \\) 是椭圆的短轴长度的一半（半短轴）。\n如果椭圆的长轴与 \\( x \\)-轴平行，则 \\( a > b \\)；如果长轴与 \\( y \\)-轴平行，则 \\( b > a \\)。\n\n例如，一个中心在原点 \\( (0, 0) \\)，长轴长度为 6（即 \\( a = 3 \\)），短轴长度为 4（即 \\( b = 2 \\)）的椭圆方程为：\n\n\\[ \\frac{x^2}{9} + \\frac{y^2}{4} = 1 \\]\n\n如果你有其他具体需求或参数，可以告诉我，我可以帮你写出更具体的方程！`;
-    addMessage('ai', testAPIMessage);
+    // 测试例子一
+    const testExample1 = `例子一：\n[ \\frac{d\\mathbf{L}}{dt} = \\mathbf{\\tau} ]`;
+    addMessage('ai', testExample1);
+
+    // 测试例子二
+    const testExample2 = `力矩是由力作用在物体上产生的旋转效应，其定义为：\n\n[ \\mathbf{\\tau} = \\mathbf{r} \\times \\mathbf{F} ]`;
+    addMessage('ai', testExample2);
 });
