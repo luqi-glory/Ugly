@@ -99,6 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter' && !sendBtn.disabled) sendMessage();
     });
 
-    const initialMessage = `你好，我是 Thinkwave。和我一起再思维海洋里激昂浪花吧！`;
+    const initialMessage = `你好，我是 Thinkwave。和我一起在思维海洋里激昂浪花吧！`;
     addMessage('ai', initialMessage);
 });
